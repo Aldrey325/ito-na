@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Special Day</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: rgb(0,128,128);
+            color: white;
+            transition: background 2s ease-in-out;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 80px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            margin: auto;
+        }
+        .message-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 90%;
+            text-align: center;
+            margin: auto;
+            color: white;
+            font-size: 14px;
+        }
+        h2 {
+            font-size: 22px;
+        }
+        p {
+            font-size: 14px;
+        }
+        input {
+            font-size: 20px;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            border: none;
+            width: 100%;
+            max-width: 250px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 12px 25px;
+            font-size: 18px;
+            background: white;
+            color: #2E7D32;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .hidden {
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .heart, .flower {
+            position: absolute;
+            font-size: 25px;
+            animation: float linear infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            50% { transform: translateY(-100px) scale(1.2); opacity: 0.7; }
+            100% { transform: translateY(-300px) scale(1); opacity: 0; }
+        }
+        #gallery {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        #gallery img {
+            width: 100%;
+            max-width: 300px;
+            margin: 10px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="page1">
+        <h2>Date of our anniversary</h2>
+        <input type="text" id="dateInput" maxlength="10" placeholder="MM/DD/YYYY" oninput="formatInput(this)">
+        <br>
+        <button onclick="checkDate()">Enter</button>
+        <p id="errorMessage" style="color: red; display: none;">DID YOU FORGET IT?</p>
+    </div>
+
+    <div class="hidden" id="page2">
+        <h2>Everyday I Love You!</h2>
+        <div class="message-box">
+            <p>Happy Valentine’s Day, Ely, my love!</p>
+            <p>Babi, Beb, I just want to take this moment to express how deeply I love you. I know that in the past, I have hurt you, and for that, I am truly sorry. It pains me to know that I caused you sadness, and if I could take back those moments, I would. The last thing I ever want is to see you in pain.</p>
+            <p>But, my love, I don’t want us to be trapped in the past. I want us to move forward, to create a new chapter filled with love, understanding, and happiness. Let’s leave behind the things—and the people—that we know only bring us pain. What matters most is us—our love, our future, and the promise of better days ahead.</p>
+            <p>I know I’m not perfect, and I’ve made mistakes. But one thing that will never change is how much I love you. I promise to be better, to love you even more, and to cherish every moment with you. You are my happiness, my heart, and my home.</p>
+            <p>Let’s start fresh, babi. Let’s build a love that’s stronger, unshaken by the past, and filled with the warmth we both deserve. I love you so much.</p>
+            <p>Happy Valentine’s Day, my love. ❤️</p>
+        </div>
+        <audio id="bgMusic" src="best.mp3" loop></audio>
+        <div id="gallery"></div>
+    </div>
+
+    <script>
+        const correctDate = "11/14/2023";
+        const images = ["1.jpg", "2.jpg", "3.jpg"];
+
+        function formatInput(input) {
+            let value = input.value.replace(/\D/g, "");
+            if (value.length > 2) value = value.slice(0, 2) + "/" + value.slice(2);
+            if (value.length > 5) value = value.slice(0, 5) + "/" + value.slice(5);
+            input.value = value;
+        }
+
+        function checkDate() {
+            const inputDate = document.getElementById("dateInput").value.trim();
+            const formattedInput = inputDate.replace(/[^0-9]/g, "");
+            const formattedCorrectDate = correctDate.replace(/[^0-9]/g, "");
+            const errorMessage = document.getElementById("errorMessage");
+
+            if (formattedInput === formattedCorrectDate) {
+                document.body.style.transition = "background 3s ease-in-out";
+                document.body.style.background = "linear-gradient(to bottom, #FF0000, #8B0000)";
+                document.getElementById("page1").style.display = "none";
+                document.getElementById("page2").classList.remove("hidden");
+                document.getElementById("page2").style.opacity = "1";
+
+                spawnHearts();
+                spawnFlowers(); // Start flower animation 🌸
+                loadImages();
+
+                // Play background music
+                const bgMusic = document.getElementById("bgMusic");
+                bgMusic.play().catch(error => console.log("Music autoplay blocked, user interaction required."));
+
+                // Enable scrolling
+                document.body.style.overflowY = "auto";
+            } else {
+                errorMessage.style.display = "block";
+            }
+        }
+
+        function spawnHearts() {
+            setInterval(() => {
+                const heart = document.createElement("div");
+                heart.classList.add("heart");
+                heart.innerHTML = "❤️";
+                heart.style.left = Math.random() * window.innerWidth + "px";
+                heart.style.animationDuration = Math.random() * 3 + 2 + "s"; // Random speed
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 3000);
+            }, 700);
+        }
+
+        function spawnFlowers() {
+            setInterval(() => {
+                const flower = document.createElement("div");
+                flower.classList.add("flower");
+                flower.innerHTML = "🌸"; // Flower emoji
+                flower.style.left = Math.random() * window.innerWidth + "px";
+                flower.style.animationDuration = Math.random() * 3 + 2 + "s"; // Random speed
+                document.body.appendChild(flower);
+                setTimeout(() => flower.remove(), 5000);
+            }, 800);
+        }
+
+        function loadImages() {
+            const gallery = document.getElementById("gallery");
+            images.forEach(src => {
+                let img = document.createElement("img");
+                img.src = src
+                gallery.appendChild(img);
+            });
+        }
+    </script>
+</body>
+</html>
